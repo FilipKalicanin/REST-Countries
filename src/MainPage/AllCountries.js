@@ -6,7 +6,6 @@ import Pagination from '../SharedComponent/Pagination';
 function Countries({ countries, setSelectedRegion }) {
     const [searchInput, setSearchInput] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedPage, setSelectedPage] = useState(1);
     const [postsPerPage] = useState(8);
 
     let allCountries = searchInput ?
@@ -20,7 +19,6 @@ function Countries({ countries, setSelectedRegion }) {
 
     function paginate(pageNumber) {
         setCurrentPage(pageNumber);
-        setSelectedPage(pageNumber);
     }
 
     const indexOfLastPost = currentPage * postsPerPage;
@@ -30,17 +28,25 @@ function Countries({ countries, setSelectedRegion }) {
 
     return (
         <>
-            <FilterDataContainer setSearchInput={setSearchInput} setSelectedRegion={setSelectedRegion} setCurrentPage={setCurrentPage} setSelectedPage={setSelectedPage} />
+            <FilterDataContainer
+            setSearchInput={setSearchInput}
+            setSelectedRegion={setSelectedRegion}
+            setCurrentPage={setCurrentPage}
+             />
             <div className="all-countries-container">
                 {allCountries.map(country => {
                     return (
-                        <div className="grid-item">
+                        <div className="grid-item" key={country.name}>
                             <Country country={country} key={country.numericCode} />
                         </div>
                     )
                 })}
             </div>
-            <Pagination paginate={paginate} postsPerPage={postsPerPage} selectedPage={selectedPage} totalPosts={totalPosts} />
+            <Pagination
+            paginate={paginate}
+            postsPerPage={postsPerPage}
+            currentPage={currentPage}
+            totalPosts={totalPosts} />
         </>
     )
 }

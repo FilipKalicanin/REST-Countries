@@ -8,10 +8,6 @@ let getAllCountries = (region) => {
     }
 };
 
-// let getCountriesByRegion = (region) => {
-//     return axios.get(`https://restcountries.eu/rest/v2/region/${region}`)
-// };
-
 let getCountryByName= (name) => {
     return axios.get(`https://restcountries.eu/rest/v2/name/${name}`);
 };

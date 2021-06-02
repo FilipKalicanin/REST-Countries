@@ -19,7 +19,7 @@ function App() {
   const [selectedRegion, setSelectedRegion] = useState('');
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentTheme, setCurrentTheme] = useState(themes.light);
+  const [currentTheme, setCurrentTheme] = useState('');
 
   useEffect(() => {
     try {
@@ -34,26 +34,35 @@ function App() {
     }
   }, [selectedRegion])
 
+  useEffect(() => {
+    let currTheme = JSON.parse(localStorage.getItem("theme"));
+    if(currTheme) {
+      setCurrentTheme(currTheme);
+    } else {
+      localStorage.setItem('theme', JSON.stringify(themes.light));
+      setCurrentTheme(themes.light);
+    }
+  },[]);
+
   function getAll(selectedRegion) {
     getAllCountries(selectedRegion).then(res => {
       setCountries(res.data)
       setIsLoading(false);
-      return res.data;
+      let arr = res.data.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item.alpha3Code]: item.name,
+        }
+      }, {})
+      setCountryCodes(arr)
     })
-      .then(res => {
-        let arr = res.reduce((obj, item) => {
-          return {
-            ...obj,
-            [item.alpha3Code]: item.name,
-          }
-        }, {})
-        setCountryCodes(arr)
-      })
   }
 
   function toggleTheme() {
     currentTheme === 'light' ? setCurrentTheme(themes.dark) : setCurrentTheme(themes.light);
-    document.body.classList.toggle('background-dark');
+    currentTheme === 'light' ? document.body.className = 'background-dark' : document.body.className = 'background-light';
+    // localStorage.clear();
+    // localStorage.setItem('theme', JSON.stringify(currentTheme));
   }
 
   return (
@@ -65,13 +74,17 @@ function App() {
           <Header />
           <Switch>
             <Route exact path="/">
-              {isLoading ? <Loading /> : <AllCountries
-                countries={countries}
-                setSelectedRegion={setSelectedRegion}
-              />}
+              {isLoading ?
+                <Loading /> :
+                <AllCountries
+                  countries={countries}
+                  setSelectedRegion={setSelectedRegion}
+                />}
             </Route>
             <Route path="/country/:name">
-              {isLoading ? <Loading /> : <CountryDetails countryCodes={countryCodes} />}
+              {isLoading ?
+                <Loading /> :
+                <CountryDetails countryCodes={countryCodes} />}
             </Route>
           </Switch>
         </BrowserRouter>}

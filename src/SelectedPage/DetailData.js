@@ -45,8 +45,8 @@ function DetailData({ countryData, countryCodes }) {
                 <div className="border-countries-holder">
                     <div className="border-countries-flex">
                         <div>{countryData?.borders?.map(border => {
-                                return <div key={border} onClick={() => redirectToDetailsPage(countryCodes[border])} className={context.currentTheme === 'light' ? 'border-country-each' : 'border-country-each-dark'}>{countryCodes[border]}</div>
-                            })}</div>
+                            return <div key={border} onClick={() => redirectToDetailsPage(countryCodes[border])} className={context.currentTheme === 'light' ? 'border-country-each' : 'border-country-each-dark'}>{countryCodes[border]}</div>
+                        })}</div>
                     </div>
                 </div>
             </div>

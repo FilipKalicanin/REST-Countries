@@ -26,16 +26,16 @@ function Country({ country }) {
                 </div>
                 <div className='country-data'>
                     <div className='country-data-positioning'>
-                        <h5 className='country-data-heading'>Population:</h5>
-                        <p className='country-data-text'>{formatNumber(country.population)}</p>
+                        <span className='country-data-heading'>Population:</span>
+                        <span className='country-data-text'>{formatNumber(country.population)}</span>
                     </div>
                     <div className='country-data-positioning'>
-                        <h5 className='country-data-heading'>Region:</h5>
-                        <p className='country-data-text'>{country.region}</p>
+                        <span className='country-data-heading'>Region:</span>
+                        <span className='country-data-text'>{country.region}</span>
                     </div>
                     <div className='country-data-positioning'>
-                        <h5 className='country-data-heading'>Capital:</h5>
-                        <p className='country-data-text'>{country.capital}</p>
+                        <span className='country-data-heading'>Capital:</span>
+                        <span className='country-data-text'>{country.capital}</span>
                     </div>
                 </div>
             </div>

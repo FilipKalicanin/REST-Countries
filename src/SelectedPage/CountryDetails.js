@@ -16,8 +16,6 @@ function CountryDetails({ countryCodes }) {
     const [isLoading, setIsLoading] = useState(true);
     const context = useContext(ThemeContext);
 
-
-
     useEffect(() => {
         try {
             getCountryByName(urlCountryName.name).then(res => {
@@ -36,23 +34,34 @@ function CountryDetails({ countryCodes }) {
     return (
         error ?
             <ErrorPage /> :
-            <>
-                <div className='section-back'>
-                    <div className={context.currentTheme === 'light' ? 'button-back-container' : 'button-back-container-dark'} onClick={handleButtonBack}>
-                        <Back />
-                        <p className="text">Back</p>
-                    </div>
-                </div>
-                <div className='country-details-container'>
-                    <div className={context.currentTheme === 'light' ? 'country-details-data-container' : 'country-details-data-container-dark'}>
-                        {isLoading ? <Loading /> : <Flag flagURL={selectedCountryData.flag} />}
-                    </div>
-                    <div className={context.currentTheme === 'light' ? 'country-details-data-container' : 'country-details-data-container-dark'}>
-                        {isLoading ? <Loading /> : <DetailData countryData={selectedCountryData} countryCodes={countryCodes} />}
-                    </div>
-                </div>
-            </>
-
+            
+            <div>
+                {isLoading ?
+                    <Loading /> :
+                    <>
+                        <div className='section-back'>
+                            <div className={context.currentTheme === 'light' ?
+                                'button-back-container' :
+                                'button-back-container-dark'}
+                                onClick={handleButtonBack} >
+                                <Back />
+                                <p className="text">Main Page</p>
+                            </div>
+                        </div>
+                        <div className='country-details-container'>
+                            <div className={context.currentTheme === 'light' ?
+                                'country-details-data-container' :
+                                'country-details-data-container-dark'} >
+                                <Flag flagURL={selectedCountryData.flag} />
+                            </div>
+                            <div className={context.currentTheme === 'light' ?
+                                'country-details-data-container' :
+                                'country-details-data-container-dark'} >
+                                <DetailData countryData={selectedCountryData} countryCodes={countryCodes} />
+                            </div>
+                        </div>
+                    </>}
+            </div>
     )
 }
 

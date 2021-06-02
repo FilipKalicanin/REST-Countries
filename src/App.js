@@ -38,9 +38,11 @@ function App() {
     let currTheme = JSON.parse(localStorage.getItem("theme"));
     if(currTheme) {
       setCurrentTheme(currTheme);
+      document.body.className = `background-${currTheme}`;
     } else {
       localStorage.setItem('theme', JSON.stringify(themes.light));
       setCurrentTheme(themes.light);
+      document.body.className = `background-light`;
     }
   },[]);
 
@@ -60,13 +62,12 @@ function App() {
 
   function toggleTheme() {
     currentTheme === 'light' ? setCurrentTheme(themes.dark) : setCurrentTheme(themes.light);
-    currentTheme === 'light' ? document.body.className = 'background-dark' : document.body.className = 'background-light';
-    // localStorage.clear();
-    // localStorage.setItem('theme', JSON.stringify(currentTheme));
+    localStorage.setItem('theme', JSON.stringify(currentTheme));
+    document.body.className = `background-${currentTheme}`;
   }
 
   return (
-    <ThemeContext.Provider value={{ toggleTheme: toggleTheme, currentTheme: currentTheme }}>
+    <ThemeContext.Provider value={{ toggleTheme: toggleTheme, currentTheme: JSON.parse(localStorage.getItem("theme")) }}>
       {error ?
         <ErrorPage />
         :

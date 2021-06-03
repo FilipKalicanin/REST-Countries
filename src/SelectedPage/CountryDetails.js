@@ -7,14 +7,16 @@ import { getCountryByName } from '../source';
 import { ErrorPage } from '../SharedComponent/ErrorPage';
 import { Loading } from '../SharedComponent/Loading';
 import { ThemeContext } from '../SharedComponent/ThemeContext';
+import AppStateContext from '../SharedComponent/AppStateContext';
 
-function CountryDetails({ countryCodes }) {
+function CountryDetails() {
     const history = useHistory();
     const urlCountryName = useParams();
     const [selectedCountryData, setSelectedCountryData] = useState([]);
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const context = useContext(ThemeContext);
+    const [state] = useContext(AppStateContext);
 
     useEffect(() => {
         try {
@@ -57,7 +59,7 @@ function CountryDetails({ countryCodes }) {
                             <div className={context.currentTheme === 'light' ?
                                 'country-details-data-container' :
                                 'country-details-data-container-dark'} >
-                                <DetailData countryData={selectedCountryData} countryCodes={countryCodes} />
+                                <DetailData countryData={selectedCountryData} countryCodes={state.countryCodes} />
                             </div>
                         </div>
                     </>}

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import FilterDataContainer from './FilterDataContainer';
 import Country from './Country';
 import Pagination from '../SharedComponent/Pagination';
+import AppStateContext from '../SharedComponent/AppStateContext';
 
-function Countries({ countries, setSelectedRegion }) {
+function Countries({ setSelectedRegion }) {
+    const [state] = useContext(AppStateContext);
+    const { countries } = state;
     const [searchInput, setSearchInput] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(8);

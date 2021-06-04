@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../Reducer&Context/ThemeContext';
 
 function Moon() {
     const context = useContext(ThemeContext);

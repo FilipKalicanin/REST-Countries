@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
-import { SearchIcon } from '../SharedComponent/SearchIcon'
-import { ThemeContext } from '../SharedComponent/ThemeContext';
+import { IconSearch } from '../../SharedComponent/IconSearch'
+import { ThemeContext } from '../../Reducer&Context/ThemeContext';
+import AppStateContext from '../../Reducer&Context/AppStateContext';
 
 const regions = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
-function FilterDataContainer({ setSearchInput, setSelectedRegion, setCurrentPage }) {
+function FilterDataContainer({ setSearchInput, setCurrentPage }) {
     const context = useContext(ThemeContext);
+    const [ ,dispatch] = useContext(AppStateContext);
 
     function handleInput(e) {
         e.preventDefault();
@@ -14,11 +16,11 @@ function FilterDataContainer({ setSearchInput, setSelectedRegion, setCurrentPage
     }
 
     function handleSelect(e) {
-        if (e.target.value === 'heading') {
-            setSelectedRegion('');
+        if (e.target.value === 'displayAll') {
+            dispatch({type: 'SELECTED_REGION', selectedRegion: ''});
             setCurrentPage(1);
         } else {
-            setSelectedRegion(e.target.value);
+            dispatch({type: 'SELECTED_REGION', selectedRegion: e.target.value});
             setCurrentPage(1);
         }
     }
@@ -29,7 +31,7 @@ function FilterDataContainer({ setSearchInput, setSelectedRegion, setCurrentPage
                 <div className={context.currentTheme === 'light' ?
                     'search-section-input-container' :
                     'search-section-input-container-dark'} >
-                    <SearchIcon />
+                    <IconSearch />
                     <input
                         type="text"
                         placeholder='Search...'
@@ -44,7 +46,7 @@ function FilterDataContainer({ setSearchInput, setSelectedRegion, setCurrentPage
                     'select-input' :
                     'select-input-dark'}
                     onChange={handleSelect} >
-                        <option value='heading'>Filter by Region</option>
+                        <option value='displayAll'>Filter by Region</option>
                         {regions.map(region => <option value={region} key={region}>{region}</option>)}
                     </select>
                 </div>

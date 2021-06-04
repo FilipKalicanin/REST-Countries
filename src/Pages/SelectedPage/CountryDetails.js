@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react'
-import Back from '../SharedComponent/IconBack';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { getCountryByName } from '../../source';
+import AppStateContext from '../../Reducer&Context/AppStateContext';
+import IconBack from '../../SharedComponent/IconBack';
 import Flag from './Flag';
 import DetailData from './DetailData';
-import { getCountryByName } from '../source';
-import { ErrorPage } from '../SharedComponent/ErrorPage';
-import { Loading } from '../SharedComponent/Loading';
-import { ThemeContext } from '../SharedComponent/ThemeContext';
-import AppStateContext from '../SharedComponent/AppStateContext';
+import { ErrorPage } from '../../SharedComponent/ErrorPage';
+import { Loading } from '../../SharedComponent/Loading';
+import { ThemeContext } from '../../Reducer&Context/ThemeContext';
 
 function CountryDetails() {
     const history = useHistory();
@@ -19,13 +19,19 @@ function CountryDetails() {
     const [state] = useContext(AppStateContext);
 
     useEffect(() => {
+        let mounted = true;
         try {
             getCountryByName(urlCountryName.name).then(res => {
-                setSelectedCountryData(res.data[0]);
-                setIsLoading(false);
+                if(mounted) {
+                    setSelectedCountryData(res.data[0]);
+                    setIsLoading(false);
+                }
             })
         } catch (error) {
             setError(true);
+        }
+        return() => {
+            mounted = false;
         }
     }, [urlCountryName.name])
 
@@ -46,7 +52,7 @@ function CountryDetails() {
                                 'button-back-container' :
                                 'button-back-container-dark'}
                                 onClick={handleButtonBack} >
-                                <Back />
+                                <IconBack />
                                 <p className="text">Main Page</p>
                             </div>
                         </div>

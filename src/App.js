@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import AllCountries from './MainPage/AllCountries';
-import CountryDetails from './SelectedPage/CountryDetails';
+import AppStateContext from './Reducer&Context/AppStateContext';
+import { ThemeContext } from './Reducer&Context/ThemeContext';
+import { getAllCountries } from './source';
+import AllCountries from './Pages/MainPage/AllCountries';
+import CountryDetails from './Pages/SelectedPage/CountryDetails';
 import Header from './SharedComponent/Header';
 import { Loading } from './SharedComponent/Loading';
-import { ThemeContext } from './SharedComponent/ThemeContext';
-import { getAllCountries } from './source';
-import AppStateContext from './SharedComponent/AppStateContext';
 import { ErrorPage } from './SharedComponent/ErrorPage';
 
 const themes = {
@@ -16,25 +16,19 @@ const themes = {
 
 function App() {
   const [state, dispatch] = useContext(AppStateContext);
-  const [selectedRegion, setSelectedRegion] = useState('');
   const [currentTheme, setCurrentTheme] = useState(themes.light);
 
   useEffect(() => {
+    dispatch({ type: 'LOADING_COUNTRIES_IN_PROGRESS' });
     try {
-      getAllCountries(selectedRegion).then(res => {
-        let codes = res.data.reduce((obj, item) => {
-          return {
-            ...obj,
-            [item.alpha3Code]: item.name,
-          }
-        }, {});
-        dispatch({ type: 'LOADING_COUNTRIES_SUCCESS', countries: res.data, countryCodes: codes });
-      })
+      getAllCountries(state.selectedRegion).then(res => {
+        dispatch({ type: 'LOADING_COUNTRIES_SUCCESS', countries: res.data, selectedRegion: state.selectedRegion });
+      });
     }
     catch (error) {
-      dispatch({ type: 'LOADING_COUNTRIES_FAILED' })
+      dispatch({ type: 'LOADING_COUNTRIES_FAILED' });
     }
-  }, [dispatch, selectedRegion]);
+  }, [dispatch, state.selectedRegion]);
 
   useEffect(() => {
     let currTheme = JSON.parse(localStorage.getItem("theme"));
@@ -49,7 +43,7 @@ function App() {
   }, []);
 
   function toggleTheme() {
-    if(currentTheme === 'light') {
+    if (currentTheme === 'light') {
       setCurrentTheme(themes.dark);
       document.body.className = `background-${themes.dark}`;
       localStorage.setItem('theme', JSON.stringify(themes.dark));
@@ -62,23 +56,23 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ currentTheme: currentTheme }}>
-      {state.error ? 
-      <ErrorPage /> :
-      <BrowserRouter>
-        <Header toggleTheme={toggleTheme} />
-        <Switch>
-          <Route exact path="/">
-            {state.isLoading ? 
-            <Loading /> :
-            <AllCountries setSelectedRegion={setSelectedRegion} />}
-          </Route>
-          <Route path="/country/:name">
-          {state.isLoading ? 
-            <Loading /> :
-            <CountryDetails setSelectedRegion={setSelectedRegion} />}
-          </Route>
-        </Switch>
-      </BrowserRouter>}
+      {state.loading === 'FAILED' ?
+        <ErrorPage /> :
+        <BrowserRouter>
+          <Header toggleTheme={toggleTheme} />
+          <Switch>
+            <Route exact path="/">
+              {state.loading === 'IN_PROGRESS' ?
+                <Loading /> :
+                <AllCountries />}
+            </Route>
+            <Route path="/country/:name">
+              {state.loading === 'IN_PROGRESS' ?
+                <Loading /> :
+                <CountryDetails />}
+            </Route>
+          </Switch>
+        </BrowserRouter>}
     </ThemeContext.Provider>
   );
 }

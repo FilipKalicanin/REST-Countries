@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function SearchIcon() {
+export function IconSearch() {
 
     return (
         <div className='search-holder'>

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ThemeContext } from '../SharedComponent/ThemeContext';
+import { ThemeContext } from '../../Reducer&Context/ThemeContext';
 
 function Country({ country }) {
     const history = useHistory();

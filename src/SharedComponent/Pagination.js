@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../Reducer&Context/ThemeContext';
 
 function Pagination({ postsPerPage, totalPosts, paginate, currentPage }) {
     const pageNumbers = [];

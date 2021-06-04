@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import FilterDataContainer from './FilterDataContainer';
 import Country from './Country';
-import Pagination from '../SharedComponent/Pagination';
-import AppStateContext from '../SharedComponent/AppStateContext';
+import Pagination from '../../SharedComponent/Pagination';
+import AppStateContext from '../../Reducer&Context/AppStateContext';
 
-function Countries({ setSelectedRegion }) {
+function Countries() {
     const [state] = useContext(AppStateContext);
     const { countries } = state;
     const [searchInput, setSearchInput] = useState('');
@@ -33,7 +33,6 @@ function Countries({ setSelectedRegion }) {
         <>
             <FilterDataContainer
             setSearchInput={setSearchInput}
-            setSelectedRegion={setSelectedRegion}
             setCurrentPage={setCurrentPage}
              />
             <div className="all-countries-container">

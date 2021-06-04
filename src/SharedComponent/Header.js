@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Moon from './IconMoon';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../Reducer&Context/ThemeContext';
 
 function Header({toggleTheme}) {
     const context = useContext(ThemeContext);

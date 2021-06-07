@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import AllCountries from './MainPage/AllCountries'
-import CountryDetails from './SelectedPage/CountryDetails'
-import Header from './SharedComponent/Header';
-import { ErrorPage } from './SharedComponent/ErrorPage';
-import { Loading } from './SharedComponent/Loading';
+import AppStateContext from './Reducer&Context/AppStateContext';
+import { ThemeContext } from './Reducer&Context/ThemeContext';
 import { getAllCountries } from './source';
-import { ThemeContext } from './SharedComponent/ThemeContext';
+import AllCountries from './Pages/MainPage/AllCountries';
+import CountryDetails from './Pages/SelectedPage/CountryDetails';
+import Header from './SharedComponent/Header';
+import { Loading } from './SharedComponent/Loading';
+import { ErrorPage } from './SharedComponent/ErrorPage';
 
 const themes = {
   dark: 'dark',
@@ -14,29 +15,24 @@ const themes = {
 };
 
 function App() {
-  const [countries, setCountries] = useState([]);
-  const [countryCodes, setCountryCodes] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentTheme, setCurrentTheme] = useState('');
+  const [state, dispatch] = useContext(AppStateContext);
+  const [currentTheme, setCurrentTheme] = useState(themes.light);
 
   useEffect(() => {
+    dispatch({ type: 'LOADING_COUNTRIES_IN_PROGRESS' });
     try {
-      if (selectedRegion) {
-        getAll(selectedRegion);
-      } else {
-        getAll();
-      }
+      getAllCountries(state.selectedRegion).then(res => {
+        dispatch({ type: 'LOADING_COUNTRIES_SUCCESS', countries: res.data, selectedRegion: state.selectedRegion });
+      });
     }
     catch (error) {
-      setError(true)
+      dispatch({ type: 'LOADING_COUNTRIES_FAILED' });
     }
-  }, [selectedRegion])
+  }, [dispatch, state.selectedRegion]);
 
   useEffect(() => {
     let currTheme = JSON.parse(localStorage.getItem("theme"));
-    if(currTheme) {
+    if (currTheme) {
       setCurrentTheme(currTheme);
       document.body.className = `background-${currTheme}`;
     } else {
@@ -44,53 +40,41 @@ function App() {
       setCurrentTheme(themes.light);
       document.body.className = `background-light`;
     }
-  },[]);
-
-  function getAll(selectedRegion) {
-    getAllCountries(selectedRegion).then(res => {
-      setCountries(res.data)
-      setIsLoading(false);
-      let arr = res.data.reduce((obj, item) => {
-        return {
-          ...obj,
-          [item.alpha3Code]: item.name,
-        }
-      }, {})
-      setCountryCodes(arr)
-    })
-  }
+  }, []);
 
   function toggleTheme() {
-    currentTheme === 'light' ? setCurrentTheme(themes.dark) : setCurrentTheme(themes.light);
-    localStorage.setItem('theme', JSON.stringify(currentTheme));
-    document.body.className = `background-${currentTheme}`;
+    if (currentTheme === 'light') {
+      setCurrentTheme(themes.dark);
+      document.body.className = `background-${themes.dark}`;
+      localStorage.setItem('theme', JSON.stringify(themes.dark));
+    } else {
+      setCurrentTheme(themes.light);
+      document.body.className = `background-${themes.light}`;
+      localStorage.setItem('theme', JSON.stringify(themes.light));
+    }
   }
 
   return (
-    <ThemeContext.Provider value={{ toggleTheme: toggleTheme, currentTheme: JSON.parse(localStorage.getItem("theme")) }}>
-      {error ?
-        <ErrorPage />
-        :
+    <ThemeContext.Provider value={{ currentTheme: currentTheme }}>
+      {state.loading === 'FAILED' ?
+        <ErrorPage /> :
         <BrowserRouter>
-          <Header />
+          <Header toggleTheme={toggleTheme} />
           <Switch>
             <Route exact path="/">
-              {isLoading ?
+              {state.loading === 'IN_PROGRESS' ?
                 <Loading /> :
-                <AllCountries
-                  countries={countries}
-                  setSelectedRegion={setSelectedRegion}
-                />}
+                <AllCountries />}
             </Route>
             <Route path="/country/:name">
-              {isLoading ?
+              {state.loading === 'IN_PROGRESS' ?
                 <Loading /> :
-                <CountryDetails countryCodes={countryCodes} />}
+                <CountryDetails />}
             </Route>
           </Switch>
         </BrowserRouter>}
     </ThemeContext.Provider>
-  )
+  );
 }
 
 export default App;

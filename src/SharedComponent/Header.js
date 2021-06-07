@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import Moon from './IconMoon';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '../Reducer&Context/ThemeContext';
 
-function Header() {
+function Header({toggleTheme}) {
     const context = useContext(ThemeContext);
 
     return (
@@ -11,7 +11,7 @@ function Header() {
                 <h2 className="header-heading">Where in the world?</h2>
                 <div className="header-theme-container">
                     <Moon />
-                    <button className={context.currentTheme === 'light' ? 'header-theme-button' : 'header-theme-button-dark'} onClick={context.toggleTheme}>Switch theme</button>
+                    <button className={context.currentTheme === 'light' ? 'header-theme-button' : 'header-theme-button-dark'} onClick={toggleTheme}>Switch theme</button>
                 </div>
             </div>
         </div>

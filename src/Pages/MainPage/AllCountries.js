@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import FilterDataContainer from './FilterDataContainer';
 import Country from './Country';
-import Pagination from '../SharedComponent/Pagination';
+import Pagination from '../../SharedComponent/Pagination';
+import AppStateContext from '../../Reducer&Context/AppStateContext';
 
-function Countries({ countries, setSelectedRegion }) {
-    const [searchInput, setSearchInput] = useState('');
+function Countries() {
+    const [state] = useContext(AppStateContext);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(8);
 
-    let allCountries = searchInput ?
-        countries.filter(country => {
-            if (country.name.toLowerCase().includes(searchInput.toLowerCase())) {
+    let allCountries = state.searchInput ?
+        state.countries.filter(country => {
+            if (country.name.toLowerCase().includes(state.searchInput.toLowerCase())) {
                 return country
             }
             return null;
         }) :
-        countries;
+        state.countries;
 
     function paginate(pageNumber) {
         setCurrentPage(pageNumber);
@@ -24,13 +25,11 @@ function Countries({ countries, setSelectedRegion }) {
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     allCountries = allCountries.slice(indexOfFirstPost, indexOfLastPost);
-    const totalPosts = countries.length;
+    const totalPosts = state.countries.length;
 
     return (
         <>
             <FilterDataContainer
-            setSearchInput={setSearchInput}
-            setSelectedRegion={setSelectedRegion}
             setCurrentPage={setCurrentPage}
              />
             <div className="all-countries-container">

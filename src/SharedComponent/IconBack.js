@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Back() {
+function IconBack() {
 
     return (
         <div className="back-holder">
@@ -11,4 +11,4 @@ function Back() {
     )
 }
 
-export default Back;
+export default IconBack;

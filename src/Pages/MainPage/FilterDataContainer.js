@@ -5,17 +5,18 @@ import AppStateContext from '../../Reducer&Context/AppStateContext';
 
 const regions = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
-function FilterDataContainer({ setSearchInput, setCurrentPage }) {
+function FilterDataContainer({ setCurrentPage }) {
     const context = useContext(ThemeContext);
     const [ ,dispatch] = useContext(AppStateContext);
 
-    function handleInput(e) {
+    function handleSearch(e) {
         e.preventDefault();
-        setSearchInput(e.target.value);
+        dispatch({type: 'SEARCH_INPUT', searchInput: e.target.value})
         setCurrentPage(1);
     }
 
     function handleSelect(e) {
+        console.log(e.target)
         if (e.target.value === 'displayAll') {
             dispatch({type: 'SELECTED_REGION', selectedRegion: ''});
             setCurrentPage(1);
@@ -36,7 +37,7 @@ function FilterDataContainer({ setSearchInput, setCurrentPage }) {
                         type="text"
                         placeholder='Search...'
                         className='search-input'
-                        onChange={handleInput}
+                        onChange={handleSearch}
                     />
                 </div>
                 <div className={context.currentTheme === 'light' ?

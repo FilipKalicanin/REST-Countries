@@ -45,6 +45,13 @@ export const countryReducer = (state, action) => {
             }
         }
 
+        case 'SEARCH_INPUT': {
+            return {
+                ...state,
+                searchInput: action.searchInput,
+            }
+        }
+
         default: {
             return state
         }
@@ -57,4 +64,5 @@ export const initialState = {
     countries: [],
     countryCodes: [],
     selectedRegion: '',
+    searchInput: ''
 }

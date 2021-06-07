@@ -6,19 +6,17 @@ import AppStateContext from '../../Reducer&Context/AppStateContext';
 
 function Countries() {
     const [state] = useContext(AppStateContext);
-    const { countries } = state;
-    const [searchInput, setSearchInput] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(8);
 
-    let allCountries = searchInput ?
-        countries.filter(country => {
-            if (country.name.toLowerCase().includes(searchInput.toLowerCase())) {
+    let allCountries = state.searchInput ?
+        state.countries.filter(country => {
+            if (country.name.toLowerCase().includes(state.searchInput.toLowerCase())) {
                 return country
             }
             return null;
         }) :
-        countries;
+        state.countries;
 
     function paginate(pageNumber) {
         setCurrentPage(pageNumber);
@@ -27,12 +25,11 @@ function Countries() {
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     allCountries = allCountries.slice(indexOfFirstPost, indexOfLastPost);
-    const totalPosts = countries.length;
+    const totalPosts = state.countries.length;
 
     return (
         <>
             <FilterDataContainer
-            setSearchInput={setSearchInput}
             setCurrentPage={setCurrentPage}
              />
             <div className="all-countries-container">
